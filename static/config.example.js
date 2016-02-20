@@ -1,2 +1,0 @@
-var MAPBOX_ACCESS_TOKEN = '';
-var GEOJSON_LOCATION = '';
