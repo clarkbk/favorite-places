@@ -64,7 +64,9 @@ $(document).ready(function(){
           iconOptions = getIconFromCategory(feature.properties.parent_category);
           return L.marker(latlng, {icon: L.MakiMarkers.icon(iconOptions)});
         }, onEachFeature: function(feature, layer) {
-          layer.bindPopup(feature.properties.name, {closeButton: false});
+          var f = feature.properties;
+          var html = '<b>' + f.name + '</b><br>' + f.address + '<br>Links: <a href="' + f.url + '" target="_blank">Yelp</a>';
+          layer.bindPopup(html, {closeButton: false});
         }
 
       });
