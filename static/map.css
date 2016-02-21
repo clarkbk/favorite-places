@@ -27,3 +27,24 @@ html, body, #map {
   position: relative;
   width: 30px;
 }
+.fa {
+  line-height: 26px;
+}
+.leaflet-control-layers {
+  border-radius: 4px;
+}
+.leaflet-control-layers a {
+  color: #444;
+  text-align: center;
+}
+.leaflet-control-layers-list {
+  margin-bottom: 0;
+}
+.leaflet-control-layers-toggle,
+.leaflet-retina .leaflet-control-layers-toggle {
+  background-image: none;
+  border-radius: 4px;
+  line-height: 30px;
+  height: 26px;
+  width: 26px;
+}

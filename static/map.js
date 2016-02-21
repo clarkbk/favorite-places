@@ -1,84 +1,86 @@
 $(document).ready(function(){
   var CONFIG = {
-    accessToken: MAPBOX_ACCESS_TOKEN,
-    attribution: '<a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
-    '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-    '<a href="http://mapbox.com">Mapbox</a>',
-    id: 'mapbox.streets',
-    maxZoom: 18,
-    tiles_api: 'https://api.tiles.mapbox.com/v4/' +
-    '{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}'
+    mapbox: {
+      accessToken: MAPBOX_ACCESS_TOKEN,
+      attribution: '<a href="http://openstreetmap.org">OpenStreetMap</a> | ' +
+      '<a href="http://mapbox.com">Mapbox</a>',
+      id: 'mapbox.streets',
+      maxZoom: 18,
+      tiles_api: 'https://api.tiles.mapbox.com/v4/' +
+      '{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}'
+    },
+    locateOptions: {
+      metric: false,
+      showPopup: false,
+      icon: 'fa fa-location-arrow',
+      locateOptions: {
+        maxZoom: 15
+      }
+    },
+    categories: {
+      restaurants: {
+        icon: {
+          color: '#e74c3c',
+          glyph: 'restaurant'
+        }
+      },
+      food: {
+        icon: {
+          color: '#e67e22',
+          glyph: 'bakery'
+        }
+      },
+      shopping: {
+        icon: {
+          color: '#2ecc71',
+          glyph: 'shop'
+        }
+      },
+      hotelstravel: {
+        icon: {
+          color: '#3498db',
+          glyph: 'ferry'
+        }
+      },
+      arts: {
+        icon: {
+          color: '#9b59b6',
+          glyph: 'town-hall'
+        }
+      }
+    }
   };
   var MyMap = L.Map.extend({
     initialize: function(id) {
       L.Map.prototype.initialize.call(this, id);
     },
-    configureLocation: function() {
-      function onLocationFound(e) {
-        var radius = {
-          m: e.accuracy / 2,
-          ft: Math.round(e.accuracy / 2 * 3.28084)
-        };
-        L.circle(e.latlng, radius.m).addTo(this);
-      }
-      function onLocationError(e) {
-        alert(e.message);
-      }
-      this.on('locationfound', onLocationFound);
-      this.on('locationerror', onLocationError);
-      this.locate({setView: true, maxZoom: 16});
-    },
-    addToMap: function(data) {
-      function getIconFromCategory(category) {
-        var iconCategories = {
-          'restaurants': {
-            'color': '#e74c3c',
-            'icon': 'restaurant'
-          },
-          'food': {
-            'color': '#e67e22',
-            'icon': 'bakery'
-          },
-          'shopping': {
-            'color': '#2ecc71',
-            'icon': 'shop'
-          },
-          'hotelstravel': {
-            'color': '#3498db',
-            'icon': 'ferry'
-          },
-          'arts': {
-            'color': '#9b59b6',
-            'icon': 'town-hall'
-          },
-        };
-        var iconOptions = {
-          color: iconCategories[category].color,
-          icon: iconCategories[category].icon,
-          size: 'm'
-        };
-        return iconOptions;
-      }
+    generateLayer: function(data) {
       var geoJsonLayer = L.geoJson(data, {
         pointToLayer: function(feature, latlng) {
-          iconOptions = getIconFromCategory(feature.properties.parent_category);
+          var category = feature.properties.parent_category;
+          var iconOptions = {
+            color: CONFIG.categories[category].icon.color,
+            icon: CONFIG.categories[category].icon.glyph,
+            size: 'm'
+          };
           return L.marker(latlng, {icon: L.MakiMarkers.icon(iconOptions)});
-        }, onEachFeature: function(feature, layer) {
+        },
+        onEachFeature: function(feature, layer) {
           var f = feature.properties;
-          var html = '<b>' + f.name + '</b><br>' + f.address + '<br>Links: <a href="' + f.url + '" target="_blank">Yelp</a>';
+          var html = '<b>' + f.name + '</b><br>';
+          html += f.address + '<br>';
+          html += 'Links: <a href="' + f.url + '" target="_blank">Yelp</a>';
           layer.bindPopup(html, {closeButton: false});
         }
-
       });
-      geoJsonLayer.addTo(this);
-      this.fitBounds(geoJsonLayer.getBounds());
       return geoJsonLayer;
     }
   });
 
   var map = new MyMap('map');
-  L.tileLayer(CONFIG.tiles_api, _.omit(CONFIG, 'tiles_api')).addTo(map);
-  map.configureLocation();
+  L.tileLayer(CONFIG.mapbox.tiles_api, _.omit(CONFIG.mapbox, 'tiles_api')).addTo(map);
+  L.control.locate(CONFIG.locateOptions).addTo(map);
+  var layerControl = L.control.layers(null, null, {position: 'topright'});
 
   var geoJsonLayer;
   $.ajax({
@@ -87,9 +89,18 @@ $(document).ready(function(){
     dataType: 'jsonp',
     jsonpCallback: 'callback',
     success: function(data) {
-      geoJsonLayer = map.addToMap(data);
-    },
-    error: function(e) {
+      var bounds = new L.LatLngBounds();
+      _.each(Object.keys(data), function(category) {
+        var layer = map.generateLayer(data[category]);
+        layer.addTo(map);
+        bounds.extend(layer.getBounds());
+        layerControl.addOverlay(layer, category);
+      });
+      layerControl.addTo(map);
+      var container = $($(layerControl)[0]._container);
+      $(container.children("a")[0]).html('<span class="fa fa-bars"></span>');
+      map.fitBounds(bounds);
+    }, error: function(e) {
       console.log(e.message);
     },
     url: GEOJSON_LOCATION

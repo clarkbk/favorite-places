@@ -13,19 +13,38 @@ CSV_LOCATION = os.environ['CSV_LOCATION']
 
 def create_geojson(csv_reader, filename, order):
     geojson = {
-        'type': 'FeatureCollection',
-        'features': []
+        'restaurants': {
+            'type': 'FeatureCollection',
+            'features': []
+        },
+        'food': {
+            'type': 'FeatureCollection',
+            'features': []
+        },
+        'shopping': {
+            'type': 'FeatureCollection',
+            'features': []
+        },
+        'hotelstravel': {
+            'type': 'FeatureCollection',
+            'features': []
+        },
+        'arts': {
+            'type': 'FeatureCollection',
+            'features': []
+        },
     }
     csv_reader.next()
     for row in csv_reader:
         lat = float(row.pop('lat'))
         lon = float(row.pop('lon'))
+        category = row['parent_category']
         feature = {
             'type': 'Feature',
             'geometry': {'type': 'Point', 'coordinates': [lon, lat]},
             'properties': row
         }
-        geojson['features'].append(feature)
+        geojson[category]['features'].append(feature)
     with open(filename, 'w') as f:
         f.write('{fn}({data})'.format(**{
             'fn': 'callback',
