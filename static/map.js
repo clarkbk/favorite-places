@@ -16,12 +16,10 @@ $(document).ready(function(){
     configureLocation: function() {
       function onLocationFound(e) {
         var radius = {
-          meters: e.accuracy / 2,
-          feet: Math.round(e.accuracy / 2 * 3.28084)
+          m: e.accuracy / 2,
+          ft: Math.round(e.accuracy / 2 * 3.28084)
         };
-        L.marker(e.latlng).addTo(this)
-        .bindPopup("You're within " + radius.feet + " feet of this pin").openPopup();
-        L.circle(e.latlng, radius.meters).addTo(this);
+        L.circle(e.latlng, radius.m).addTo(this);
       }
       function onLocationError(e) {
         alert(e.message);
@@ -65,7 +63,10 @@ $(document).ready(function(){
         pointToLayer: function(feature, latlng) {
           iconOptions = getIconFromCategory(feature.properties.parent_category);
           return L.marker(latlng, {icon: L.MakiMarkers.icon(iconOptions)});
+        }, onEachFeature: function(feature, layer) {
+          layer.bindPopup(feature.properties.name, {closeButton: false});
         }
+
       });
       geoJsonLayer.addTo(this);
       this.fitBounds(geoJsonLayer.getBounds());

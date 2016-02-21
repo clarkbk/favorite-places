@@ -5,3 +5,25 @@ body {
 html, body, #map {
   height: 100%;
 }
+.leaflet-popup-content-wrapper {
+  background: #2c3e50;
+  box-shadow: none;
+  border-radius:3px;
+  color: #fff;
+  font-size: 15px;
+  line-height: 24px;
+  -webkit-background-origin: content-box;
+}
+.leaflet-popup-content-wrapper a {
+  color: #88ffffff;
+  color: rgba(255,255,255,0.5);
+}
+.leaflet-popup-tip-container {
+  height: 15px;
+  margin: 0 auto;
+  position: relative;
+  width: 30px;
+}
+.leaflet-popup-tip {
+  background: #2c3e50;
+}
