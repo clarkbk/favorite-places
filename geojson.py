@@ -11,7 +11,14 @@ AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 CSV_LOCATION = os.environ['CSV_LOCATION']
 
 
-def create_geojson(csv_reader, filename, order):
+def get_csv(headers):
+    url = CSV_LOCATION
+    r = requests.get(url)
+    reader = csv.DictReader(r.text.splitlines(), headers)
+    return reader
+
+
+def geojson_from_csv(csv_reader, order):
     geojson = {
         'restaurants': {
             'type': 'FeatureCollection',
@@ -45,6 +52,10 @@ def create_geojson(csv_reader, filename, order):
             'properties': row
         }
         geojson[category]['features'].append(feature)
+    return geojson
+
+
+def write_geojson(geojson, filename):
     with open(filename, 'w') as f:
         f.write('{fn}({data})'.format(**{
             'fn': 'callback',
@@ -52,7 +63,20 @@ def create_geojson(csv_reader, filename, order):
         }))
 
 
-def main():
+def put_on_s3(filename):
+    conn = S3Connection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+    bucket = 'favorite-places'
+    k = Key(conn.get_bucket(bucket))
+    k.key = os.path.join('nyc', filename)
+    k.set_contents_from_filename(filename)
+    return 'https://s3.amazonaws.com/{bucket}/{key}'.format(**{
+        'bucket': bucket,
+        'key': k.key
+    })
+
+
+def update_geojson():
+    filename = 'favorite-places.jsonp'
     headers = [
         'name',
         'parent_category',
@@ -66,25 +90,10 @@ def main():
         'rating',
         'url'
     ]
-
-    url = CSV_LOCATION
-    r = requests.get(url)
-    reader = csv.DictReader(r.text.splitlines(), headers)
-
-    filename = 'favorite-places.jsonp'
-    create_geojson(reader, filename, headers)
-
-    conn = S3Connection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
-    bucket = 'favorite-places'
-    k = Key(conn.get_bucket(bucket))
-    k.key = os.path.join('nyc', filename)
-    k.set_contents_from_filename(filename)
-    fileurl = 'https://s3.amazonaws.com/{bucket}/{key}'.format(**{
-        'bucket': bucket,
-        'key': k.key
-    })
-    print fileurl
-
+    reader = get_csv(headers)
+    geojson = geojson_from_csv(reader, headers)
+    write_geojson(geojson, filename)
+    put_on_s3(filename)
 
 if __name__ == '__main__':
-    main()
+    update_geojson()
