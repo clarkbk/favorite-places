@@ -36,13 +36,7 @@ $(document).ready(function(){
           glyph: 'shop'
         }
       },
-      hotelstravel: {
-        icon: {
-          color: '#3498db',
-          glyph: 'ferry'
-        }
-      },
-      arts: {
+      thingstodo: {
         icon: {
           color: '#9b59b6',
           glyph: 'town-hall'

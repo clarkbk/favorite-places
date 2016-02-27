@@ -32,14 +32,10 @@ def geojson_from_csv(csv_reader, order):
             'type': 'FeatureCollection',
             'features': []
         },
-        'hotelstravel': {
+        'thingstodo': {
             'type': 'FeatureCollection',
             'features': []
-        },
-        'arts': {
-            'type': 'FeatureCollection',
-            'features': []
-        },
+        }
     }
     csv_reader.next()
     for row in csv_reader:
