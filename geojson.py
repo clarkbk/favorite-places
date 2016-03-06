@@ -76,11 +76,9 @@ def update_geojson():
         'parent_category',
         'categories',
         'address',
-        'cross_streets',
         'neigborhoods',
         'lat',
         'lon',
-        'review_count',
         'rating',
         'url'
     ]
