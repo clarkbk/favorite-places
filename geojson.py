@@ -71,6 +71,7 @@ def put_on_s3(filename):
 def update_geojson():
     filename = 'favorite-places.jsonp'
     headers = [
+        'source',
         'name',
         'parent_category',
         'categories',
