@@ -19,28 +19,25 @@ def get_csv(headers):
 
 
 def geojson_from_csv(csv_reader, order):
-    geojson = {
-        'restaurants': {
-            'type': 'FeatureCollection',
-            'features': []
-        },
-        'food': {
-            'type': 'FeatureCollection',
-            'features': []
-        },
-        'shopping': {
-            'type': 'FeatureCollection',
-            'features': []
-        },
-        'thingstodo': {
+    categories = [
+        'restaurants',
+        'food',
+        'shopping',
+        'thingstodo',
+        'parks',
+        'ferries',
+    ]
+    geojson = {}
+    for cat in categories:
+        geojson[cat] = {
             'type': 'FeatureCollection',
             'features': []
         }
-    }
     csv_reader.next()
     for row in csv_reader:
         lat = float(row.pop('lat'))
         lon = float(row.pop('lon'))
+        row.pop('source')
         category = row['parent_category']
         feature = {
             'type': 'Feature',

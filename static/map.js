@@ -27,12 +27,14 @@ $(document).ready(function(){
       food: {
         icon: {
           color: '#e67e22',
-          glyph: 'bakery'
+          glyph: 'fast-food',
+          // glyph: 'bakery',
+          // glyph: 'cafe',
         }
       },
       shopping: {
         icon: {
-          color: '#2ecc71',
+          color: '#f1c40f',
           glyph: 'shop'
         }
       },
@@ -41,7 +43,19 @@ $(document).ready(function(){
           color: '#9b59b6',
           glyph: 'town-hall'
         }
-      }
+      },
+      parks: {
+        icon: {
+          color: '#2ecc71',
+          glyph: 'park-2'
+        }
+      },
+      ferries: {
+        icon: {
+          color: '#3498db',
+          glyph: 'ferry'
+        }
+      },
     }
   };
   var MyMap = L.Map.extend({
