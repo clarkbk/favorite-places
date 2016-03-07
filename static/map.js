@@ -47,7 +47,7 @@ $(document).ready(function(){
       parks: {
         icon: {
           color: '#2ecc71',
-          glyph: 'park-2'
+          glyph: 'park'
         }
       },
       ferries: {
