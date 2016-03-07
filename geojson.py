@@ -14,7 +14,8 @@ CSV_LOCATION = os.environ['CSV_LOCATION']
 def get_csv(headers):
     url = CSV_LOCATION
     r = requests.get(url)
-    reader = csv.DictReader(r.text.splitlines(), headers)
+    rows = [line.encode('utf-8') for line in r.text.splitlines()]
+    reader = csv.DictReader(rows, fieldnames=headers)
     return reader
 
 
