@@ -108,7 +108,6 @@ $(document).ready(function(){
       var container = $($(layerControl)[0]._container);
       $(container.children("a")[0]).html('<span class="fa fa-bars"></span>');
       map.fitBounds(bounds);
-      console.log(typeof ZOOM);
       if (typeof ZOOM !== 'undefined') map.setZoom(ZOOM);
     }, error: function(e) {
       console.log(e.message);
