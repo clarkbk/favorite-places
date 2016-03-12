@@ -3,6 +3,7 @@ import os
 
 from flask import Flask
 from flask import render_template
+from flask import request
 from geojson import update_geojson
 
 
@@ -19,7 +20,8 @@ CONFIG = {
 
 @app.route('/nyc')
 def index():
-    return render_template('map.html', config=CONFIG)
+    zoom = request.args.get('z')
+    return render_template('map.html', config=CONFIG, zoom=zoom)
 
 
 @app.route('/update', methods=['POST'])

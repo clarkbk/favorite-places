@@ -10,6 +10,7 @@
     <script type="text/javascript">
       var GEOJSON_LOCATION = '{{ config['GEOJSON_LOCATION'] }}';
       var MAPBOX_ACCESS_TOKEN = '{{ config['MAPBOX_ACCESS_TOKEN'] }}';
+      {% if zoom %}var ZOOM = {{ zoom }};{% endif %}
     </script>
     <script src="../static/map.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
