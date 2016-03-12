@@ -17,7 +17,7 @@ CONFIG = {
 }
 
 
-@app.route('/map')
+@app.route('/nyc')
 def index():
     return render_template('map.html', config=CONFIG)
 
