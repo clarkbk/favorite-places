@@ -20,8 +20,11 @@ CONFIG = {
 
 @app.route('/nyc')
 def index():
-    zoom = request.args.get('z')
-    return render_template('map.html', config=CONFIG, zoom=zoom)
+    options = {}
+    for param, value in request.args.items():
+        if param in ['z', 'embed']:
+            options[param] = request.args.get(param)
+    return render_template('map.html', config=CONFIG, options=options)
 
 
 @app.route('/update', methods=['POST'])

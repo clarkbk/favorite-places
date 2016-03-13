@@ -59,8 +59,9 @@ $(document).ready(function(){
     }
   };
   var MyMap = L.Map.extend({
-    initialize: function(id) {
-      L.Map.prototype.initialize.call(this, id);
+    initialize: function(id, opt) {
+      var options = opt || {};
+      L.Map.prototype.initialize.call(this, id, options);
     },
     generateLayer: function(data) {
       var geoJsonLayer = L.geoJson(data, {
@@ -85,9 +86,19 @@ $(document).ready(function(){
     }
   });
 
-  var map = new MyMap('map');
+  var options = {};
+  if (IFRAME) {
+    options = {
+      'attributionControl': false,
+      'zoomControl': false,
+      'touchZoom': false,
+      'scrollWheelZoom': false
+    };
+  }
+
+  var map = new MyMap('map', options);
   L.tileLayer(CONFIG.mapbox.tiles_api, _.omit(CONFIG.mapbox, 'tiles_api')).addTo(map);
-  L.control.locate(CONFIG.locateOptions).addTo(map);
+  if (!IFRAME) L.control.locate(CONFIG.locateOptions).addTo(map);
   var layerControl = L.control.layers(null, null, {position: 'topright'});
 
   var geoJsonLayer;
