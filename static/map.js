@@ -86,16 +86,12 @@ $(document).ready(function(){
     }
   });
 
-  var options = {};
-  if (IFRAME) {
-    options = {
-      'attributionControl': false,
-      'zoomControl': false,
-      'touchZoom': false,
-      'scrollWheelZoom': false
-    };
-  }
-
+  var options = IFRAME ? {
+    'attributionControl': false,
+    'zoomControl': false,
+    'touchZoom': false,
+    'scrollWheelZoom': false
+  } : {};
   var map = new MyMap('map', options);
   L.tileLayer(CONFIG.mapbox.tiles_api, _.omit(CONFIG.mapbox, 'tiles_api')).addTo(map);
   if (!IFRAME) L.control.locate(CONFIG.locateOptions).addTo(map);
