@@ -4,7 +4,7 @@ $(document).ready(function(){
       accessToken: MAPBOX_ACCESS_TOKEN,
       attribution: '<a href="http://openstreetmap.org">OpenStreetMap</a> | ' +
       '<a href="http://mapbox.com">Mapbox</a>',
-      id: 'mapbox.streets',
+      id: 'mapbox.emerald',
       maxZoom: 18,
       tiles_api: 'https://api.tiles.mapbox.com/v4/' +
       '{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}'
