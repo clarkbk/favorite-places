@@ -35,7 +35,7 @@ $ workon favorite-places
 $ python server.py
 ```
 
-Launch `http://localhost:5000/nyc` in your browser.
+Launch `localhost:5000/nyc` in your browser.
 
 ## Deployment
 
