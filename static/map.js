@@ -68,6 +68,7 @@ $(document).ready(function(){
         pointToLayer: function(feature, latlng) {
           var category = feature.properties.parent_category;
           var iconOptions = {
+            accessToken: CONFIG.mapbox.accessToken,
             color: CONFIG.categories[category].icon.color,
             icon: CONFIG.categories[category].icon.glyph,
             size: 'm'
