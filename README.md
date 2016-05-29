@@ -8,7 +8,7 @@ In terminal:
 $ touch .env
 ```
 
-In .env:
+In `.env`:
 
 ```bash
 export AWS_ACCESS_KEY_ID=…
